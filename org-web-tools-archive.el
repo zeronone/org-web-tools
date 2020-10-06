@@ -105,7 +105,8 @@ program for the extension."
 (defcustom org-web-tools-archive-wget-options
   (list "--ignore-tags=script,iframe"
         "--reject=eot,ttf,svg,otf,*.woff*"
-        "--execute robots=off"
+        "--execute"
+	"robots=off"
         "--adjust-extension"
         "--span-hosts"
         "--convert-links"
@@ -121,7 +122,8 @@ don't interfere with that are safe to add here."
   :type '(repeat string))
 
 (defcustom org-web-tools-archive-wget-html-only-options
-  (list "--execute robots=off"
+  (list "--execute"
+	"robots=off"
         "--adjust-extension"
         "--timestamping"
         "--no-directories")
