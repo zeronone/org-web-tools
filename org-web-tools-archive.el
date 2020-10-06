@@ -313,12 +313,26 @@ temporary directory is not, because the archive is inside it."
                 (wget-args (append (list "--no-directories" "--directory-prefix" "files")
                                    org-web-tools-archive-wget-options
                                    (list url)))
+                (remove-integrity-find-args (list "./files"
+                                                  "-name" "*.html"
+                                                  "-type" "f"
+                                                  "-exec"
+                                                  "sed" "-E" "-i"
+                                                  "''"
+                                                  "s/integrity=\"sha.*\"|crossorigin=\"anonymous\"//g"
+                                                  "{}" ";"))
                 (tar-args (list "--create" "--auto-compress" "--file" archive-path "./")))
       (unwind-protect
           (with-temp-buffer
             (cd temp-dir)
+            (message "%s %s" "wget" (string-join wget-args " "))
+            (message "%s %s" "find" (string-join remove-integrity-find-args " "))
+            (message "%s %s" "tar" (string-join tar-args " "))
             (pcase (apply #'call-process "wget" nil t nil wget-args)
-              (0 (call-tar))
+              (0 (pcase (apply #'call-process "find" nil t nil remove-integrity-find-args)
+                   (0 (call-tar))
+                   (code (message "%s" (prin1 (concat "find output:\n\n" (buffer-string))))
+                         (call-tar))))
               (code (message "%s" (prin1 (concat "wget output:\n\n" (buffer-string))))
                     (warn "wget exited with code %s, meaning that some errors were encountered.  They might be just 404s for some images.  Check the saved archived to be sure it was archived to your satisfaction.  The full output from wget is in the \"*Messages*\" buffer." code)
                     (call-tar))))
