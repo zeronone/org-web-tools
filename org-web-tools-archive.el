@@ -106,7 +106,7 @@ program for the extension."
   (list "--ignore-tags=script,iframe"
         "--reject=eot,ttf,svg,otf,*.woff*"
         "--execute"
-	"robots=off"
+        "robots=off"
         "--adjust-extension"
         "--span-hosts"
         "--convert-links"
@@ -123,7 +123,7 @@ don't interfere with that are safe to add here."
 
 (defcustom org-web-tools-archive-wget-html-only-options
   (list "--execute"
-	"robots=off"
+        "robots=off"
         "--adjust-extension"
         "--timestamping"
         "--no-directories")
@@ -224,7 +224,7 @@ on-disk in the temp directory."
                        ;; Assume that if it's not a zip file, it's a tar archive
                        ;; (`extension' will be just, e.g. "xz").
                        (_ (call-process (executable-find "tar") nil t nil
-                                        "--auto-compress"
+                                        ;; "--auto-compress"
                                         "--extract"
                                         "--directory" temp-dir
                                         "--file" archive-path))))
